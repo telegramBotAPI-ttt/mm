@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Приглашение на свидание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg1:#fff0f5; --bg2:#ffd9e6; --card:rgba(255,255,255,.78); --ink:#6b2d45; --muted:#a2607a;
+  --accent:#e8789f; --accent2:#f7a8c4; --soft:#ffe3ec; --line:#f6c6d7; --on-accent:#fff; --shadow:0 18px 50px rgba(220,100,140,.22);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg1:#2b1620; --bg2:#3d1f2d; --card:rgba(60,32,44,.82); --ink:#ffe3ec; --muted:#e3a6bd;
+    --accent:#f08cb0; --accent2:#b24d74; --soft:#4a2638; --line:#6a3a50; --on-accent:#2b1620; --shadow:0 18px 50px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg1:#2b1620; --bg2:#3d1f2d; --card:rgba(60,32,44,.82); --ink:#ffe3ec; --muted:#e3a6bd;
+  --accent:#f08cb0; --accent2:#b24d74; --soft:#4a2638; --line:#6a3a50; --on-accent:#2b1620; --shadow:0 18px 50px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; min-height:100vh; color:var(--ink);
+  font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif; font-size:20px;
+  background:radial-gradient(circle at 15% 10%,var(--bg2),transparent 45%),radial-gradient(circle at 90% 90%,var(--bg2),transparent 40%),var(--bg1);
+  background-attachment:fixed; overflow-x:hidden;
+}
+.petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.petal{position:absolute;top:-8vh;opacity:.55;animation:fall linear infinite;color:var(--accent2)}
+@keyframes fall{to{transform:translateY(112vh) rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.petal{animation:none;display:none}}
+main{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:36px 18px 56px}
+.card{background:var(--card);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:28px 22px;margin-bottom:22px;text-align:center}
+.heart{font-size:34px;line-height:1}
+h1{font-family:"Marck Script","Brush Script MT",cursive;font-weight:400;font-size:clamp(34px,9vw,46px);line-height:1.15;margin:10px 0 6px;color:var(--accent)}
+h2{font-family:"Marck Script","Brush Script MT",cursive;font-weight:400;font-size:30px;margin:0 0 4px;color:var(--accent)}
+p{margin:6px 0}
+.lead{font-size:23px}
+.from{color:var(--muted);font-style:italic}
+.hint{color:var(--muted);font-size:18px;margin-bottom:14px}
+.cal-head,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-head span{font-size:16px;color:var(--muted);font-weight:600;padding-bottom:4px}
+.day{aspect-ratio:1;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:50%;font:inherit;font-size:21px;font-weight:600;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s,box-shadow .15s}
+.day small{position:absolute;bottom:4px;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.day:hover{transform:scale(1.08);background:var(--accent2)}
+.day.sel{background:var(--accent);color:var(--on-accent);border-color:var(--accent);box-shadow:0 8px 20px rgba(232,120,159,.45)}
+.day.sel small{color:var(--on-accent)}
+.blank{visibility:hidden}
+.picked{margin-top:16px;min-height:28px;font-size:22px;color:var(--accent);font-weight:600}
+.places{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.place{border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:22px;padding:18px 10px;font:inherit;cursor:pointer;transition:transform .15s,background .15s,box-shadow .15s}
+.place:hover{transform:translateY(-3px);background:var(--accent2);box-shadow:0 10px 24px rgba(232,120,159,.3)}
+.place .em{font-size:38px;display:block}
+.place b{display:block;font-size:24px;margin-top:4px}
+.place span.d{display:block;font-size:16px;color:var(--muted);margin-top:2px;line-height:1.25}
+.place:hover span.d{color:var(--ink)}
+.place:disabled{opacity:.6;cursor:default;transform:none}
+.hidden{display:none}
+.reveal{animation:rise .6s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.thanks{padding:46px 22px}
+.thanks h2{font-size:clamp(30px,8vw,40px);line-height:1.2}
+.fallback{margin-top:18px;font-size:17px;color:var(--muted)}
+.fallback textarea{width:100%;margin-top:8px;border:1px solid var(--line);border-radius:14px;background:var(--soft);color:var(--ink);font:inherit;font-size:17px;padding:10px;resize:none}
+.alt{margin-top:18px;font-size:17px}
+.ghost{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.btn{display:inline-block;text-decoration:none;margin-top:10px;border:0;border-radius:999px;background:var(--accent);color:var(--on-accent);font:inherit;font-weight:600;font-size:19px;padding:10px 22px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="petals" id="petals" aria-hidden="true"></div>
+<main>
+  <section class="card" id="intro">
+    <div class="heart">💗</div>
+    <h1>Юлианна Витальевна</h1>
+    <p class="lead">Андрей Бориович приглашает Вас на свидание</p>
+    <p class="from">Выберите день, который Вам по душе ✨</p>
+  </section>
+
+  <section class="card" id="step1">
+    <h2>Когда?</h2>
+    <p class="hint">с 28 октября по 10 ноября</p>
+    <div class="cal-head"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+    <div class="cal-grid" id="cal"></div>
+    <div class="picked" id="picked"></div>
+  </section>
+
+  <section class="card hidden" id="step2">
+    <h2>Куда пойдём?</h2>
+    <p class="hint">Выберите место для нашей встречи</p>
+    <div class="places" id="places"></div>
+  </section>
+
+  <section class="card thanks hidden" id="done" aria-live="polite">
+    <div class="heart">💞</div>
+    <h2>Спасибо, ваш запрос обрабатывается милкой</h2>
+    <div class="fallback">
+      <p>Остался последний шаг — нажмите, чтобы Андрей получил Ваш ответ ♡</p>
+      <a class="btn" id="tgBtn" href="#" target="_blank" rel="noopener">Отправить в Telegram</a>
+      <p class="alt">Если Telegram не открылся, скопируйте ответ и отправьте Андрею: @andgmn</p>
+      <textarea id="fbText" rows="3" readonly></textarea>
+      <button class="btn ghost" id="copyBtn" type="button">Скопировать</button>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var PLACES=[
+    {id:"park",em:"🌳",name:"Парк",d:"Прогулка по осенним аллеям"},
+    {id:"cafe",em:"☕",name:"Кафе",d:"Уютный вечер и что-нибудь вкусное"},
+    {id:"cinema",em:"🎬",name:"Кино",d:"Хороший фильм и попкорн"},
+    {id:"theatre",em:"🎭",name:"Театр",d:"Вечер с антрактом и бархатом кресел"}
+  ];
+  var MONTHS=["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+  var fmt=new Intl.DateTimeFormat("ru-RU",{weekday:"long",day:"numeric",month:"long"});
+  var chosenDate=null, chosenLabel="", sent=false;
+
+  // petals
+  var pl=document.getElementById("petals"), sym=["🌸","💗","🌷","♡"];
+  for(var i=0;i<14;i++){
+    var s=document.createElement("span");
+    s.className="petal"; s.textContent=sym[i%sym.length];
+    s.style.left=(Math.random()*100)+"vw";
+    s.style.fontSize=(14+Math.random()*16)+"px";
+    s.style.animationDuration=(14+Math.random()*16)+"s";
+    s.style.animationDelay=(-Math.random()*25)+"s";
+    pl.appendChild(s);
+  }
+
+  // calendar: 28 Oct – 10 Nov 2026
+  var cal=document.getElementById("cal"), picked=document.getElementById("picked");
+  var first=new Date(2026,9,28), lead=(first.getDay()+6)%7;
+  for(var b=0;b<lead;b++){var e=document.createElement("div");e.className="blank";cal.appendChild(e);}
+  for(var k=0;k<14;k++){
+    (function(k){
+      var d=new Date(2026,9,28+k);
+      var btn=document.createElement("button");
+      btn.type="button"; btn.className="day"; btn.textContent=d.getDate();
+      if(k===0||d.getDate()===1){var sm=document.createElement("small");sm.textContent=MONTHS[d.getMonth()];btn.appendChild(sm);}
+      btn.addEventListener("click",function(){
+        if(sent) return;
+        var all=cal.querySelectorAll(".day");
+        for(var j=0;j<all.length;j++) all[j].classList.remove("sel");
+        btn.classList.add("sel");
+        chosenDate=d;
+        chosenLabel=fmt.format(d);
+        picked.textContent="💕 "+chosenLabel;
+        var st=document.getElementById("step2");
+        var wasHidden=st.classList.contains("hidden");
+        st.classList.remove("hidden");
+        if(wasHidden){st.classList.add("reveal");setTimeout(function(){st.scrollIntoView({behavior:"smooth",block:"center"});},80);}
+      });
+      cal.appendChild(btn);
+    })(k);
+  }
+
+  // places
+  var pc=document.getElementById("places");
+  PLACES.forEach(function(p){
+    var b=document.createElement("button");
+    b.type="button"; b.className="place";
+    b.innerHTML='<span class="em">'+p.em+'</span><b>'+p.name+'</b><span class="d">'+p.d+'</span>';
+    b.addEventListener("click",function(){ submit(p); });
+    pc.appendChild(b);
+  });
+
+  function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+
+  async function submit(p){
+    if(sent||!chosenDate) return;
+    sent=true;
+    var btns=document.querySelectorAll(".place");
+    for(var i=0;i<btns.length;i++) btns[i].disabled=true;
+
+    var text="Юлианна Витальевна выбрала: "+chosenLabel+", место — "+p.name+" "+p.em;
+    var record={who:"Юлианна Витальевна",date:iso(chosenDate),dateLabel:chosenLabel,placeId:p.id,place:p.name,summary:text,at:new Date().toISOString()};
+
+    document.getElementById("intro").classList.add("hidden");
+    document.getElementById("step1").classList.add("hidden");
+    document.getElementById("step2").classList.add("hidden");
+    var done=document.getElementById("done");
+    done.classList.remove("hidden"); done.classList.add("reveal");
+    window.scrollTo({top:0,behavior:"smooth"});
+
+    document.getElementById("fbText").value=text;
+    document.getElementById("tgBtn").href="https://t.me/andgmn?text="+encodeURIComponent(text);
+  }
+
+  document.getElementById("copyBtn").addEventListener("click",function(){
+    var t=document.getElementById("fbText"); t.select();
+    try{ navigator.clipboard.writeText(t.value); }catch(e){ try{document.execCommand("copy");}catch(_){} }
+    this.textContent="Скопировано ♡";
+  });
+})();
+</script>
+</body>
+</html>
